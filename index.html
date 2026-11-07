@@ -23,11 +23,11 @@
   }
   .screen.on { opacity: 1; pointer-events: auto; }
 
-  .text { font-size: clamp(24px, 6.4vw, 34px); line-height: 1.35; max-width: 500px; margin: 0; }
-  .label { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #8a8372; margin: 0 0 24px; }
-  .small { font-size: 15px; line-height: 1.5; color: #8a8372; margin: 14px 0 0; letter-spacing: .02em; }
-  .btn { display: block; width: min(78vw, 300px); margin: 0 auto; padding: 16px 20px; background: none; color: #f1ebdc;
-         border: 1px solid #5a574f; border-radius: 999px; font: 18px Georgia, serif; letter-spacing: .06em; cursor: pointer; }
+  .text { font-size: clamp(20px, 5.2vw, 26px); line-height: 1.4; max-width: 480px; margin: 0; }
+  .label { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: #8a8372; margin: 0 0 22px; }
+  .small { font-size: 14px; line-height: 1.5; color: #8a8372; margin: 12px 0 0; letter-spacing: .02em; }
+  .btn { display: block; width: min(74vw, 280px); margin: 0 auto; padding: 14px 20px; background: none; color: #f1ebdc;
+         border: 1px solid #5a574f; border-radius: 999px; font: 16px Georgia, serif; letter-spacing: .06em; cursor: pointer; }
   .btn:active { background: #1c1b18; }
   .link { background: none; border: 0; color: #77746b; font: 14px Georgia, serif; letter-spacing: .1em; padding: 12px 14px; cursor: pointer; }
   .link:active { color: #aaa; }
@@ -35,27 +35,27 @@
   .row { display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
 
   /* HOME: a circle with three words around it */
-  .ring { --S: min(88vw, 54vh, 400px); position: relative; width: var(--S); height: var(--S); }
-  .circle { position: absolute; left: 50%; top: 50%; width: calc(var(--S) * .46); aspect-ratio: 1;
-            margin: calc(var(--S) * -.23) 0 0 calc(var(--S) * -.23); border: 1px solid #8a8372; border-radius: 50%;
+  .ring { --D: min(70vw, 36vh, 330px); position: relative; width: var(--D); height: var(--D); }
+  .circle { position: absolute; inset: 0; border: 1px solid #8a8372; border-radius: 50%;
             animation: breathe 9s ease-in-out infinite; pointer-events: none; }
-  @keyframes breathe { 0%,100% { transform: scale(.84); opacity: .45; } 50% { transform: scale(1.1); opacity: 1; } }
-  .word { position: absolute; left: 50%; top: 50%; background: none; border: 0; color: #f1ebdc; font: 22px Georgia, serif;
-          letter-spacing: .14em; padding: 18px 20px; cursor: pointer;
-          transform: rotate(var(--a)) translateX(calc(var(--S) * .44)) rotate(calc(var(--a) * -1)) translate(-50%, -50%); }
+  @keyframes breathe { 0%,100% { transform: scale(.88); opacity: .45; } 50% { transform: scale(1.06); opacity: 1; } }
+  /* each word sits at angle --a, distance --k times the circle width from its centre */
+  .word { position: absolute; left: 50%; top: 50%; background: none; border: 0; color: #f1ebdc; font: 15px Georgia, serif;
+          letter-spacing: .24em; padding: 22px 22px 22px calc(22px + .24em); cursor: pointer; white-space: nowrap;
+          transform: rotate(var(--a)) translateX(calc(var(--D) * var(--k))) rotate(calc(var(--a) * -1)) translate(-50%, -50%); }
   .word:active { color: #8a8372; }
 
   /* TENDER: four quadrants */
   .quad { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1px; background: #2e2c27;
-          width: min(90vw, 440px); height: min(62vh, 440px); border: 1px solid #2e2c27; }
-  .quad button { background: #000; color: #f1ebdc; border: 0; font: 20px/1.3 Georgia, serif; padding: 12px; cursor: pointer; letter-spacing: .03em; }
+          width: min(92vw, 480px); height: min(74vh, 680px); border: 1px solid #2e2c27; }
+  .quad button { background: #000; color: #f1ebdc; border: 0; font: 17px/1.3 Georgia, serif; padding: 12px; cursor: pointer; letter-spacing: .04em; }
   .quad button:active { background: #14130f; }
 
   /* reading pages */
   .page { justify-content: flex-start; align-items: stretch; text-align: left; }
   .page .wrap { width: 100%; max-width: 520px; margin: 0 auto; padding-bottom: 30px; }
-  .page h2 { font-weight: normal; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #8a8372; margin: 22px 0 20px; text-align: center; }
-  .page p { margin: 0 0 16px; font-size: 20px; line-height: 1.4; }
+  .page h2 { font-weight: normal; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: #8a8372; margin: 22px 0 20px; text-align: center; }
+  .page p { margin: 0 0 14px; font-size: 18px; line-height: 1.45; }
   .page .top { text-align: center; }
 
   /* LOST */
@@ -67,7 +67,7 @@
   /* READY: slide to confirm */
   .slide { position: relative; width: min(82vw, 340px); height: 62px; border: 1px solid #5a574f; border-radius: 999px; transition: opacity .6s; }
   .slide .slide-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding-left: 44px;
-                        font-size: 16px; letter-spacing: .06em; color: #cfc9ba; pointer-events: none; }
+                        font-size: 15px; letter-spacing: .06em; color: #cfc9ba; pointer-events: none; }
   .knob { position: absolute; left: 3px; top: 3px; width: 54px; height: 54px; border-radius: 50%; background: #f1ebdc; touch-action: none; cursor: grab; }
   .knob::after { content: ""; position: absolute; left: 20px; top: 21px; width: 10px; height: 10px; border-top: 2px solid #111; border-right: 2px solid #111; transform: rotate(45deg); }
   .slide.locked { opacity: .28; }
@@ -101,9 +101,9 @@
 <div class="screen" id="home">
   <div class="ring">
     <div class="circle"></div>
-    <button class="word" style="--a:-90deg" data-go="tender">tender</button>
-    <button class="word" style="--a:150deg" data-go="lost">lost</button>
-    <button class="word" style="--a:30deg"  data-go="ready">ready</button>
+    <button class="word" id="wT" style="--a:-90deg; --k:.7386" data-go="tender">tender</button>
+    <button class="word" id="wL" style="--a:120deg; --k:.768" data-go="lost">lost</button>
+    <button class="word" id="wR" style="--a:60deg;  --k:.7807" data-go="ready">ready</button>
   </div>
 </div>
 
@@ -269,7 +269,12 @@ function resetReady() {
 }
 
 /* ---------- decrypting your private content ---------- */
-const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+// accepts the URL-safe form (and the older +/ form), ignores stray spaces or line breaks
+const b64d = s => {
+  s = s.replace(/[\s"';]/g, '').replace(/-/g, '+').replace(/_/g, '/');
+  while (s.length % 4) s += '=';
+  return Uint8Array.from(atob(s), c => c.charCodeAt(0));
+};
 async function decrypt(blob, pass) {
   const raw = b64d(blob), salt = raw.slice(0, 16), iv = raw.slice(16, 28), ct = raw.slice(28);
   const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);

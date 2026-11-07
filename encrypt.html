@@ -40,7 +40,7 @@ Optional: your own encouraging lines, added to the built-in ones.</textarea>
   <button id="go">encrypt</button><button id="copy" style="display:none">copy</button>
   <div id="msg"></div>
   <textarea id="out" readonly></textarea>
-  <p style="margin-top:22px">Paste the code between the quotes of <code>const ENCRYPTED = ""</code> at the top of the script in <code>index.html</code>. Keep your passphrase somewhere safe. If you forget it, the content can't be recovered.</p>
+  <p style="margin-top:22px">Copy the whole line above. In <code>index.html</code>, find the line that starts with <code>const ENCRYPTED =</code> near the top of the script and replace that entire line with the one you copied. Keep your passphrase somewhere safe. If you forget it, the content can't be recovered.</p>
 </div>
 <script>
 const $ = id => document.getElementById(id);
@@ -54,7 +54,8 @@ function parse(t) {
   });
   return out;
 }
-const b64 = u8 => btoa(String.fromCharCode(...u8));
+// URL-safe base64: only letters, digits, - and _ (no slashes, so nothing can look like a comment)
+const b64 = u8 => btoa(String.fromCharCode(...u8)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 async function encrypt(text, pass) {
   const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
   const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
@@ -70,7 +71,7 @@ $('go').addEventListener('click', async () => {
   const data = parse($('src').value);
   if (!Object.keys(data).length) { $('msg').textContent = 'Add at least one [heading] with lines under it.'; return; }
   try {
-    $('out').value = await encrypt(JSON.stringify(data), pass);
+    $('out').value = 'const ENCRYPTED = "' + await encrypt(JSON.stringify(data), pass) + '";';
     $('out').style.display = 'block'; $('copy').style.display = 'inline-block';
   } catch (e) { $('msg').textContent = 'This page needs https (GitHub Pages is fine).'; }
 });
