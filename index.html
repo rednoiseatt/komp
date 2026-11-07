@@ -17,22 +17,28 @@
 
   .screen {
     position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: calc(env(safe-area-inset-top) + 28px) 28px calc(env(safe-area-inset-bottom) + 28px);
+    padding: calc(env(safe-area-inset-top) + 76px) 28px calc(env(safe-area-inset-bottom) + 84px);
     text-align: center; opacity: 0; pointer-events: none; transition: opacity .9s ease;
     overflow-y: auto; -webkit-overflow-scrolling: touch;
   }
   .screen.on { opacity: 1; pointer-events: auto; }
 
-  .text { font-size: clamp(20px, 5.2vw, 26px); line-height: 1.4; max-width: 480px; margin: 0; }
-  .label { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: #8a8372; margin: 0 0 22px; }
-  .small { font-size: 14px; line-height: 1.5; color: #8a8372; margin: 12px 0 0; letter-spacing: .02em; }
+  .text { font-size: 15px; line-height: 1.6; max-width: 420px; margin: 0; letter-spacing: .02em; }
+  .label { font-size: 15px; letter-spacing: .2em; text-transform: uppercase; color: #8a8372; margin: 0 0 22px; }
+  .small { font-size: 15px; line-height: 1.5; color: #8a8372; margin: 12px 0 0; letter-spacing: .02em; }
   .btn { display: block; width: min(74vw, 280px); margin: 0 auto; padding: 14px 20px; background: none; color: #f1ebdc;
-         border: 1px solid #5a574f; border-radius: 999px; font: 16px Georgia, serif; letter-spacing: .06em; cursor: pointer; }
+         border: 1px solid #5a574f; border-radius: 999px; font: 15px Georgia, serif; letter-spacing: .06em; cursor: pointer; }
   .btn:active { background: #1c1b18; }
-  .link { background: none; border: 0; color: #77746b; font: 14px Georgia, serif; letter-spacing: .1em; padding: 12px 14px; cursor: pointer; }
+  .link { background: none; border: 0; color: #77746b; font: 15px Georgia, serif; letter-spacing: .1em; padding: 12px 14px; cursor: pointer; }
   .link:active { color: #aaa; }
   .stack { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 40px; }
   .row { display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+
+  /* every sub-screen: its name at the very top, back/home at the very bottom */
+  .hd { position: fixed; left: 0; right: 0; top: calc(env(safe-area-inset-top) + 24px); text-align: center; pointer-events: none;
+        font-size: 15px; letter-spacing: .24em; padding-left: .24em; color: #cfc9ba; }
+  .ft { position: fixed; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 16px); display: flex; justify-content: center; gap: 6px; }
+  #ready.quoted #notYet { display: none; }
 
   /* HOME: a circle with three words around it */
   .ring { --D: min(70vw, 36vh, 330px); position: relative; width: var(--D); height: var(--D); }
@@ -47,22 +53,25 @@
 
   /* TENDER: four quadrants */
   .quad { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1px; background: #2e2c27;
-          width: min(92vw, 480px); height: min(74vh, 680px); border: 1px solid #2e2c27; }
-  .quad button { background: #000; color: #f1ebdc; border: 0; font: 17px/1.3 Georgia, serif; padding: 12px; cursor: pointer; letter-spacing: .04em; }
+          width: min(92vw, 480px); height: min(calc(100vh - 200px), 680px); border: 1px solid #2e2c27; }
+  .quad button { background: #000; color: #f1ebdc; border: 0; font: 15px/1.3 Georgia, serif; padding: 12px; cursor: pointer; letter-spacing: .06em; }
   .quad button:active { background: #14130f; }
 
   /* reading pages */
   .page { justify-content: flex-start; align-items: stretch; text-align: left; }
   .page .wrap { width: 100%; max-width: 520px; margin: 0 auto; padding-bottom: 30px; }
-  .page h2 { font-weight: normal; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: #8a8372; margin: 22px 0 20px; text-align: center; }
-  .page p { margin: 0 0 14px; font-size: 18px; line-height: 1.45; }
-  .page .top { text-align: center; }
+  .page h2 { font-weight: normal; font-size: 15px; letter-spacing: .2em; text-transform: uppercase; color: #8a8372; margin: 4px 0 24px; text-align: center; }
+  .page p { margin: 0 0 14px; font-size: 15px; line-height: 1.55; letter-spacing: .02em; }
 
   /* LOST */
   .dots { display: flex; gap: 10px; margin-bottom: 30px; }
   .dots i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid #77746b; }
   .dots i.on { background: #f1ebdc; border-color: #f1ebdc; }
   .mini { width: 56px; height: 56px; border: 1px solid #77746b; border-radius: 50%; margin: 0 auto 34px; animation: breathe 9s ease-in-out infinite; }
+  /* the text block has a fixed height, so the dots, label and button never move between steps */
+  #lostText { height: 8em; }
+  #lost .label { height: 1.2em; }
+  #lost .stack { margin-top: 24px; }
 
   /* READY: slide to confirm */
   .slide { position: relative; width: min(82vw, 340px); height: 62px; border: 1px solid #5a574f; border-radius: 999px; transition: opacity .6s; }
@@ -80,9 +89,9 @@
 
   /* UNLOCK */
   input[type=password] { width: min(78vw, 300px); background: #0e0e0c; color: #f1ebdc; border: 1px solid #3a3832; border-radius: 999px;
-                         padding: 15px 20px; font: 18px Georgia, serif; text-align: center; margin-bottom: 14px; -webkit-user-select: text; user-select: text; }
+                         padding: 15px 20px; font: 16px Georgia, serif; text-align: center; margin-bottom: 14px; -webkit-user-select: text; user-select: text; }
   input[type=password]:focus { outline: none; border-color: #77746b; }
-  .err { color: #b38b7a; font-size: 14px; min-height: 20px; margin: 0 0 12px; }
+  .err { color: #b38b7a; font-size: 15px; min-height: 20px; margin: 0 0 12px; }
 </style>
 </head>
 <body>
@@ -109,49 +118,51 @@
 
 <!-- TENDER -->
 <div class="screen" id="tender">
+  <div class="hd">tender</div>
   <div class="quad">
     <button data-page="who">who am I?</button>
     <button data-page="rules">my rules</button>
     <button data-page="routine">my routine</button>
     <button data-page="interests">my interests</button>
   </div>
-  <div class="row"><button class="link" data-go="home">home</button></div>
+  <div class="ft"><button class="link" data-go="home">home</button></div>
 </div>
 <div class="screen page" id="page">
+  <div class="hd">tender</div>
   <div class="wrap">
-    <div class="top"><button class="link" data-go="tender">back</button></div>
     <h2 id="pageTitle"></h2>
     <div id="pageBody"></div>
   </div>
+  <div class="ft"><button class="link" data-go="tender">back</button></div>
 </div>
 
 <!-- LOST -->
 <div class="screen" id="lost">
+  <div class="hd">lost</div>
   <div class="dots"><i></i><i></i><i></i></div>
   <div class="mini" id="lostMini"></div>
   <p class="label" id="lostLabel"></p>
   <p class="text" id="lostText"></p>
   <div class="stack">
     <button class="btn" id="lostNext">next</button>
-    <button class="link" data-go="home">home</button>
   </div>
+  <div class="ft"><button class="link" data-go="home">home</button></div>
 </div>
 
 <!-- READY -->
 <div class="screen" id="ready">
-  <p class="label" id="readyLabel">ready</p>
+  <div class="hd">ready</div>
   <div id="readyArea">
     <div class="slide" id="s1"><div class="slide-label">am I kind to myself?</div><div class="knob"></div></div>
     <div class="slide locked" id="s2"><div class="slide-label">start the task</div><div class="knob"></div></div>
     <p class="small" id="readySub">you know it will be better once you start</p>
-    <div class="row">
-      <button class="link" data-go="tender" id="notYet">not yet</button>
-      <button class="link" data-go="home">home</button>
-    </div>
   </div>
   <div id="quoteBox">
     <p class="text" id="quoteText"></p>
-    <div class="stack"><button class="link" data-go="home">home</button></div>
+  </div>
+  <div class="ft">
+    <button class="link" data-go="tender" id="notYet">not yet</button>
+    <button class="link" data-go="home">home</button>
   </div>
 </div>
 
@@ -162,7 +173,8 @@
    To keep your own text private: make it at encrypt.html, paste
    the long code it gives you between the quotes below.
    ============================================================ */
-const ENCRYPTED = "5cdHIDVtYs3D6urmXVge_dCi2j9RYK7lzxiQRJ9CRQryA6WnMLeDCB5dfcmEyEH_sn4GnNQKvEgXZTfj6E7OccTL91-41I8ebCmYjEnRRWW-cEtVBjpPYDmwj_wWhHxJ52MfeUi0mlaznV0b3GxL05uaPxOLZPQQxlySMNFhigB_6Ckq0abGVcfzeR2cqA4_FEs8J_16AiKNEAJpqSQaHUMye12Ko5RpWgrgBuNuqxOK8c40EAu0ASygpmffn1w_c_vLWwH8o8Wl2lh0kbK7cqDc-AyQHRe2mzz1CWu6A5pMJwmVyv0T37spS291_cSwWXdD78MseSYbw2vTYpDLgJVQ2YHJQI421y8R5r5qcIKSxaYjPc6OxLJJ4YZJB1wGngQeTQqfitPLO5oPuh4UJfkSMUaGP2H21sdzXQhGCINIPbuYMv9Uljd0ab5FagVGLpCq2m2leVFHteM";
+const ENCRYPTED = "";
+
 /* Sample content shown until you add your own. */
 const DEMO = {
   who: ["Sample: I care about making things.", "Sample: I keep going, even slowly."],
@@ -255,7 +267,7 @@ function makeSlider(root, onDone) {
 }
 const sl1 = makeSlider($('s1'), () => { $('s2').classList.remove('locked'); });
 const sl2 = makeSlider($('s2'), () => {
-  $('readyArea').classList.add('gone'); $('readyLabel').style.display = 'none';
+  $('readyArea').classList.add('gone'); $('ready').classList.add('quoted');
   if (!quotes.length) quotes = QUOTES.slice();
   const i = Math.floor(Math.random() * quotes.length);
   $('quoteText').textContent = quotes.splice(i, 1)[0];
@@ -263,7 +275,7 @@ const sl2 = makeSlider($('s2'), () => {
 });
 function resetReady() {
   sl1.reset(); sl2.reset(); $('s2').classList.add('locked');
-  $('readyArea').classList.remove('gone'); $('readyLabel').style.display = '';
+  $('readyArea').classList.remove('gone'); $('ready').classList.remove('quoted');
   const q = $('quoteBox'); q.classList.remove('show'); q.style.display = 'none';
 }
 
