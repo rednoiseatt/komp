@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Encrypt</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #000; color: #f1ebdc; font: 16px/1.5 Georgia, serif; padding: 28px 20px 60px; }
+  .wrap { max-width: 560px; margin: 0 auto; }
+  h1 { font-weight: normal; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; color: #8a8372; margin: 0 0 14px; }
+  p { color: #9a9588; font-size: 15px; margin: 0 0 18px; }
+  textarea, input { width: 100%; background: #0e0e0c; color: #f1ebdc; border: 1px solid #3a3832; border-radius: 8px; padding: 14px; font: 16px/1.5 Georgia, serif; }
+  textarea { height: 300px; resize: vertical; }
+  input { margin: 16px 0; }
+  textarea:focus, input:focus { outline: none; border-color: #77746b; }
+  button { background: none; color: #f1ebdc; border: 1px solid #5a574f; border-radius: 999px; padding: 13px 30px; font: 17px Georgia, serif; cursor: pointer; margin-right: 8px; }
+  button:active { background: #1c1b18; }
+  #out { height: 120px; margin-top: 22px; font: 13px/1.4 monospace; display: none; word-break: break-all; }
+  #msg { margin-top: 14px; color: #b38b7a; min-height: 22px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>encrypt your content</h1>
+  <p>Write under each heading, one line per item. Everything happens on this page. Nothing is sent anywhere.</p>
+  <textarea id="src" spellcheck="false">[who]
+I am ...
+[rules]
+My rule ...
+[routine]
+Morning: ...
+Evening: ...
+[interests]
+Something I love ...
+[quotes]
+Optional: your own encouraging lines, added to the built-in ones.</textarea>
+  <input type="password" id="pass" placeholder="choose a passphrase" autocomplete="off">
+  <button id="go">encrypt</button><button id="copy" style="display:none">copy</button>
+  <div id="msg"></div>
+  <textarea id="out" readonly></textarea>
+  <p style="margin-top:22px">Paste the code between the quotes of <code>const ENCRYPTED = ""</code> at the top of the script in <code>index.html</code>. Keep your passphrase somewhere safe. If you forget it, the content can't be recovered.</p>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+function parse(t) {
+  const out = {}; let key = null;
+  t.split('\n').forEach(line => {
+    const l = line.trim(); if (!l) return;
+    const m = l.match(/^\[(\w+)\]$/);
+    if (m) { key = m[1].toLowerCase(); out[key] = out[key] || []; }
+    else if (key) out[key].push(l);
+  });
+  return out;
+}
+const b64 = u8 => btoa(String.fromCharCode(...u8));
+async function encrypt(text, pass) {
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 250000, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(text)));
+  const all = new Uint8Array(16 + 12 + ct.length); all.set(salt, 0); all.set(iv, 16); all.set(ct, 28);
+  return b64(all);
+}
+$('go').addEventListener('click', async () => {
+  $('msg').textContent = '';
+  const pass = $('pass').value;
+  if (pass.length < 8) { $('msg').textContent = 'Use a passphrase of at least 8 characters.'; return; }
+  const data = parse($('src').value);
+  if (!Object.keys(data).length) { $('msg').textContent = 'Add at least one [heading] with lines under it.'; return; }
+  try {
+    $('out').value = await encrypt(JSON.stringify(data), pass);
+    $('out').style.display = 'block'; $('copy').style.display = 'inline-block';
+  } catch (e) { $('msg').textContent = 'This page needs https (GitHub Pages is fine).'; }
+});
+$('copy').addEventListener('click', () => { $('out').select(); document.execCommand('copy'); $('msg').style.color = '#9a9588'; $('msg').textContent = 'Copied.'; });
+</script>
+</body>
+</html>
