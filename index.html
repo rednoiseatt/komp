@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Compass">
+<meta name="apple-mobile-web-app-title" content="Kompas">
 <meta name="theme-color" content="#000000">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="apple-touch-icon.png">
-<title>Compass</title>
+<title>Kompas</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; height: 100%; background: #000; color: #f1ebdc; overflow: hidden; }
@@ -98,7 +98,7 @@
 
 <!-- UNLOCK (only when your content is encrypted) -->
 <div class="screen" id="unlock">
-  <p class="label">compass</p>
+  <p class="label">Kompas</p>
   <form id="unlockForm" autocomplete="off">
     <input type="password" id="pass" placeholder="passphrase" autocomplete="off" autocapitalize="off" autocorrect="off">
     <p class="err" id="err"></p>
@@ -187,7 +187,7 @@ const DEMO = {
 const LOST_STEPS = [
   { label: "sit with it", text: "Stay here for a moment. You don't have to fix anything or work anything out. Just notice where you feel it, and let it be there." },
   { label: "time heals", text: "This feeling has a shape and an edge, even if you can't see the edge yet. You've felt low before and it moved. It will move again." },
-  { label: "self-compassion", text: "Say to yourself: this is hard, and I'm allowed to find it hard. Then ask, what would I say to a friend who felt like this?" }
+  { label: "self-Kompasion", text: "Say to yourself: this is hard, and I'm allowed to find it hard. Then ask, what would I say to a friend who felt like this?" }
 ];
 
 const QUOTES = [
@@ -292,7 +292,7 @@ async function decrypt(blob, pass) {
   const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 250000, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
   return new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct));
 }
-const CACHE = 'compass-private';
+const CACHE = 'Kompas-private';
 function cached() {
   try { const c = JSON.parse(localStorage.getItem(CACHE)); if (c && c.blob === ENCRYPTED) return c.data; } catch (e) {}
   return null;
