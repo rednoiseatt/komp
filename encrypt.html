@@ -24,11 +24,15 @@
 <body>
 <div class="wrap">
   <h1>encrypt your content</h1>
-  <p>Write under each heading, one line per item. Everything happens on this page. Nothing is sent anywhere.</p>
+  <p>Write under each heading, one line per item. To indent a line, start it with two spaces (one level) or four (two levels). On a computer the Tab key works too. Leave an empty line wherever you want a gap. Everything happens on this page. Nothing is sent anywhere.</p>
   <textarea id="src" spellcheck="false">[who]
 I am ...
 [rules]
 My rule ...
+  A detail under that rule
+  Another detail
+    Even deeper
+Next rule ...
 [routine]
 Morning: ...
 Evening: ...
@@ -48,14 +52,15 @@ function parse(t) {
   const out = {}; let key = null;
   t.split('\n').forEach(line => {
     const l = line.trim();
-    if (!l) {
+    if (!l) {                                   // an empty line becomes a gap (once, never at the start or end)
       if (key && out[key].length && out[key][out[key].length - 1] !== '') out[key].push('');
       return;
     }
     const m = l.match(/^\[(\w+)\]$/);
     if (m) { key = m[1].toLowerCase(); out[key] = out[key] || []; }
     else if (key) {
-      const lead = line.match(/^[ \t\u00a0]*/)[0];
+      // indentation: each Tab is one level, and so is every two spaces
+      const lead = line.match(/^[ \t ]*/)[0];
       const level = (lead.match(/\t/g) || []).length + Math.floor(lead.replace(/\t/g, '').length / 2);
       out[key].push('\t'.repeat(Math.min(level, 4)) + l);
     }
@@ -73,6 +78,12 @@ async function encrypt(text, pass) {
   const all = new Uint8Array(16 + 12 + ct.length); all.set(salt, 0); all.set(iv, 16); all.set(ct, 28);
   return b64(all);
 }
+$('src').addEventListener('keydown', e => {          // Tab inserts an indent instead of leaving the box
+  if (e.key !== 'Tab') return;
+  e.preventDefault();
+  const t = e.target, a = t.selectionStart, z = t.selectionEnd;
+  t.value = t.value.slice(0, a) + '\t' + t.value.slice(z); t.selectionStart = t.selectionEnd = a + 1;
+});
 $('go').addEventListener('click', async () => {
   $('msg').textContent = '';
   const pass = $('pass').value;
