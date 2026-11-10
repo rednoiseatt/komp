@@ -47,11 +47,20 @@ const $ = id => document.getElementById(id);
 function parse(t) {
   const out = {}; let key = null;
   t.split('\n').forEach(line => {
-    const l = line.trim(); if (!l) return;
+    const l = line.trim();
+    if (!l) {
+      if (key && out[key].length && out[key][out[key].length - 1] !== '') out[key].push('');
+      return;
+    }
     const m = l.match(/^\[(\w+)\]$/);
     if (m) { key = m[1].toLowerCase(); out[key] = out[key] || []; }
-    else if (key) out[key].push(l);
+    else if (key) {
+      const lead = line.match(/^[ \t\u00a0]*/)[0];
+      const level = (lead.match(/\t/g) || []).length + Math.floor(lead.replace(/\t/g, '').length / 2);
+      out[key].push('\t'.repeat(Math.min(level, 4)) + l);
+    }
   });
+  for (const k in out) while (out[k].length && out[k][out[k].length - 1] === '') out[k].pop();
   return out;
 }
 // URL-safe base64: only letters, digits, - and _ (no slashes, so nothing can look like a comment)
