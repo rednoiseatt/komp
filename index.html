@@ -229,6 +229,7 @@ function openPage(key) {
     const p = document.createElement('p'); p.textContent = x.slice(lvl);
     if (lvl) { p.style.marginLeft = (lvl * 1.5) + 'em'; p.style.color = '#cfc9ba'; }
     body.appendChild(p);
+    if (!x.trim()) { const g = document.createElement('div'); g.style.height = '1.6em'; body.appendChild(g); return; }
   });  go('page');
 }
 
